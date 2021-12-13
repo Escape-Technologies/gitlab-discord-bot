@@ -1,0 +1,12 @@
+{
+  "steps": [
+    {
+      "name": "eslint",
+      "command": "npm run lint"
+    },
+    {
+      "name": "prettier",
+      "command": "npm run format:check"
+    }
+  ]
+}
