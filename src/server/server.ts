@@ -11,7 +11,12 @@ export class GitlabServer {
     this._app = app;
 
     app.use(express.json());
-
+    app.use((req: WebhookRequest, res, next) => {
+      console.log('-------------------------');
+      console.log(JSON.stringify(req.body, null, 2));
+      console.log('-------------------------');
+      return next();
+    });
     app.use(mrMiddleware);
   }
 

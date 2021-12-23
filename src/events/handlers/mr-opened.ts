@@ -46,25 +46,20 @@ const mrCreatedHandler: EventHandler = async (
 
   const isDraft = mr.title.includes('Draft:');
 
-  const stored = mrManager.get(mr.id);
-  if (stored) {
-    // The merge request is already not drafted, so it has already been notified
-    if (!isDraft && !stored.title.includes('Draft:')) {
-      return;
-    }
-  }
-
   // In every case, update the store with the current merge request, or create it
-  console.log(`storing mr with id ${mr.id} and state ${mr.state}`);
   mrManager.store(mr.id, {
     state: mr.state,
     id: mr.id,
     title: mr.title,
-    draft: isDraft
+    draft: isDraft,
+    assignees: (mr.assignees || []).map((a) => a.username as string),
+    reviewers: (mr.reviewers || []).map((r) => r.username as string)
   });
 
   if (!isDraft) {
     notifyChannelForMR(mr.author, project.name, mr.title, mr.web_url);
+  } else {
+    console.log(`Skipping merge request ${mr.id} because it is drafted`);
   }
 };
 

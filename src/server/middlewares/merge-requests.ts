@@ -1,5 +1,6 @@
 import bus from '../../events';
 import { EventName } from '../../events/entities';
+import { MrUpdateWebhookPayload } from '../dtos/mr-updated.interface';
 import { WebhookRequest } from '../server';
 
 function shouldHandle(req: WebhookRequest) {
@@ -18,14 +19,25 @@ function validatePayload(req: WebhookRequest) {
 
 function handleMR(req: WebhookRequest) {
   const { project, object_attributes } = req.body;
-  const { state, id } = object_attributes;
-  console.log(`received mr event with status ${state}`);
-  if (state === 'opened') {
+  const { action, id } = object_attributes;
+  console.log(`received mr event with action ${action}`);
+
+  if (action === 'open' || action === 'reopen') {
     const data = { projectId: project.id, mrId: id };
     console.log(`emitting event "${EventName.MR_OPENED}" with payload`);
     console.log(data);
     bus.emit(EventName.MR_OPENED, {
       data
+    });
+  }
+
+  if (action === 'update') {
+    const body = req.body as MrUpdateWebhookPayload;
+    const data = { projectId: project.id, mrId: id };
+    console.log(`emitting event "${EventName.MR_UPDATED}" with payload`);
+    console.log(data);
+    bus.emit<MrUpdateWebhookPayload>(EventName.MR_UPDATED, {
+      data: body
     });
   }
 }
