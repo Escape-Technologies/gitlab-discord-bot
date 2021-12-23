@@ -1,59 +1,18 @@
-import axios from 'axios';
-import { CommandResult } from '.';
-import { env } from '../../utils/environment';
-
-export interface UserMappingRecord {
-  gitlabId: string;
-  discordId: string;
-}
-
-interface AirtableRecords {
-  records: {
-    id: string;
-    fields: UserMappingRecord;
-    createdTime: string;
-  }[];
-}
+import { CommandResult } from './entities';
+import { userManager } from '../../managers';
 
 export async function register(
   discordId: string,
   gitlabId: string
 ): Promise<CommandResult> {
-  const { data } = await axios.get<AirtableRecords>(env.airtableUrl, {
-    headers: {
-      Authorization: `Bearer ${env.airtableAPIKey}`
-    }
-  });
-  const existingRecord = data.records.find(
-    (record) =>
-      record.fields.discordId === discordId &&
-      record.fields.gitlabId === gitlabId
-  );
-  if (existingRecord) {
-    return { error: `You are already watching \`${gitlabId}\`` };
+  if (userManager.isWatching(gitlabId, discordId)) {
+    return { error: `You are already watching \`${gitlabId}\` !` };
   }
   try {
-    await axios.post<AirtableRecords>(
-      env.airtableUrl,
-      {
-        records: [
-          {
-            fields: {
-              discordId: discordId,
-              gitlabId: gitlabId
-            }
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${env.airtableAPIKey}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-  } catch {
-    return { error: `Registration of \`${gitlabId}\` failed.` };
+    await userManager.addWatcher(gitlabId, discordId);
+    return { result: { message: `Succesfully registered \`${gitlabId}\`` } };
+  } catch (e) {
+    console.error(e);
+    return { error: 'Oops! Something went wrong' };
   }
-  return { result: { message: `Succesfully registered \`${gitlabId}\`` } };
 }

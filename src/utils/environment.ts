@@ -5,20 +5,20 @@ dotenv.config();
 export class Environment {
   gitlabToken: string;
   botToken: string;
-  botPort?: number;
   mrsChannelId: string;
-  gitlabProjectsIds: number[];
-  airtableAPIKey: string;
-  airtableUrl: string;
+  gitlabProjectId: number;
+  airtableApiKey: string;
+  airtableTable: string;
+  airtableBase: string;
+  serverPort: number;
 
   constructor() {
     [
       'GITLAB_TOKEN',
       'BOT_TOKEN',
       'MRS_CHANNEL_ID',
-      'GITLAB_PROJECT_IDS',
-      'AIRTABLE_API_KEY',
-      'AIRTABLE_URL'
+      'GITLAB_PROJECT_ID',
+      'AIRTABLE_CONFIG'
     ].forEach((k) => {
       if (!process.env[k]) {
         throw new Error(
@@ -28,13 +28,19 @@ export class Environment {
     });
     this.gitlabToken = process.env.GITLAB_TOKEN!;
     this.botToken = process.env.BOT_TOKEN!;
-    this.botPort = parseInt(process.env.DISCORD_BOT_PORT!);
     this.mrsChannelId = process.env.MRS_CHANNEL_ID!;
-    this.airtableAPIKey = process.env.AIRTABLE_API_KEY!;
-    this.airtableUrl = process.env.AIRTABLE_URL!;
-    this.gitlabProjectsIds = process.env
-      .GITLAB_PROJECT_IDS!.split(',')
-      .map((pi) => parseInt(pi));
+
+    const airtableConfig = process.env.AIRTABLE_CONFIG!.split(':');
+    if (airtableConfig.length !== 3) {
+      throw new Error(
+        'Invalid Airtable config provided. Expected format is <base>:<apiKey>:<tableName>'
+      );
+    }
+    this.airtableBase = airtableConfig[0];
+    this.airtableApiKey = airtableConfig[1];
+    this.airtableTable = airtableConfig[2];
+    this.gitlabProjectId = parseInt(process.env.GITLAB_PROJECT_ID!);
+    this.serverPort = parseInt(process.env.SERVER_PORT || '3000');
   }
 }
 
