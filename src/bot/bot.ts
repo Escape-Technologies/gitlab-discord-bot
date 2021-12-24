@@ -56,7 +56,7 @@ export class GitlabBot {
           .setTitle(`Hello `)
           .setColor('#409bd7')
           .setDescription(
-            "I'll be managing this channel mostly, but **I can do a lot more !**\nFor more informations, you can **DM** me with the command `!help`.\n\nI'll be sending merge requests informations on this channel.\n\nI also offer **per-user features**, such as *notifications on comments or replies*, or *reviewal request notifications*.\nTo do so, I'll need you to just register your Gitlab username by sending me `!register <your username>`\n\n :warning: If you previously registered your username, I have been reset and I need you to register once again. :warning:"
+            "I'll be managing this channel mostly, but **I can do a lot more !**\nFor more informations, you can **DM** me with the command `!help`.\n\nI'll be sending merge requests informations on this channel.\n\nI also offer **per-user features**, such as *notifications on comments or replies*, or *reviewal request notifications*.\nTo do so, I'll need you to just register your Gitlab username by sending me `/register <your username>`\n\n :warning: If you previously registered your username, I have been reset and I need you to register once again. :warning:"
           )
           .setThumbnail(this.user.displayAvatarURL())
           .setTimestamp()
