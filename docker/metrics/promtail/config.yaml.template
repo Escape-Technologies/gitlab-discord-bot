@@ -1,0 +1,20 @@
+server:
+  http_listen_port: 0
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+client:
+  url: https://125387:${GRAFANA_API_KEY}@logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: ${SERVICE}
+          language: ${LANGUAGE}
+          env: ${ENVIRONMENT}
+          __path__: ${LOG_FILE}

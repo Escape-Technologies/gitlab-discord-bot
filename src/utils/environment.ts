@@ -40,7 +40,7 @@ export class Environment {
     this.airtableApiKey = airtableConfig[1];
     this.airtableTable = airtableConfig[2];
     this.gitlabProjectId = parseInt(process.env.GITLAB_PROJECT_ID!);
-    this.serverPort = parseInt(process.env.SERVER_PORT || '3000');
+    this.serverPort = parseInt(process.env.SERVER_PORT || '8080');
   }
 }
 

@@ -1,0 +1,23 @@
+instance = "${SERVICE}-${ENVIRONMENT}"
+max_procs = 2
+pid_file = "carbon-relay-ng.pid"
+spool_dir = "spool"
+log_level = "info"
+listen_addr = "0.0.0.0:2003"
+plain_read_timeout = "2m"
+pickle_addr = "0.0.0.0:2013"
+pickle_read_timeout = "2m"
+validate_order = false
+bad_metrics_max_age = "24h"
+
+[[route]]
+key = 'grafanaNet'
+type = 'grafanaNet'
+addr = 'https://graphite-prod-01-eu-west-0.grafana.net/graphite/metrics'
+apikey = '252833:${GRAFANA_API_KEY}'
+schemasFile = '/etc/carbon-relay-ng/storage-schemas.conf'
+aggregationFile = '/etc/carbon-relay-ng/storage-aggregation.conf'
+
+[instrumentation]
+graphite_addr = "localhost:2003"
+graphite_interval = 10000  # in ms
