@@ -11,6 +11,7 @@ export class Environment {
   airtableTable: string;
   airtableBase: string;
   serverPort: number;
+  logFile?: string;
 
   constructor() {
     [
@@ -41,6 +42,7 @@ export class Environment {
     this.airtableTable = airtableConfig[2];
     this.gitlabProjectId = parseInt(process.env.GITLAB_PROJECT_ID!);
     this.serverPort = parseInt(process.env.SERVER_PORT || '8080');
+    this.logFile = process.env.LOG_FILE;
   }
 }
 

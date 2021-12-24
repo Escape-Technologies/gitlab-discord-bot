@@ -1,4 +1,5 @@
 import winston from 'winston';
+import { env } from './environment';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -16,18 +17,17 @@ const logger = winston.createLogger({
   ]
 });
 
-if (process.env.LOG_FILE) {
-  logger.info(`Logs are stored at a custom location : ${process.env.LOG_FILE}`);
+if (env.logFile) {
+  logger.info(`Logs are stored at a custom location : ${env.logFile}`);
   logger.add(
     new winston.transports.File({
-      filename: process.env.LOG_FILE,
+      filename: env.logFile,
       format: winston.format.json()
     })
   );
 } else {
-  logger.info('process.env.LOG_FILE is not defined');
+  logger.info('env.logFile is not defined');
   logger.info('Logs are not persisted in a file');
 }
 
-module.exports = logger;
 export default logger;
