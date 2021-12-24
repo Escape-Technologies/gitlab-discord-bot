@@ -2,9 +2,9 @@ import { UserSchema } from '@gitbeaker/core/dist/types/types';
 import { MessageEmbed } from 'discord.js';
 import bot from '../../bot';
 import { userManager } from '../../managers';
-import { MrOpenedWebhookPayload } from '../../server/dtos/mr-opened.interface';
+import { MrClosedWebhookPayload } from '../../server/dtos/mr-closed.interface';
 import gitlabClient from '../../utils/gitlab-client';
-import { EventHandler, EventPayload } from '../entities';
+import { EventPayload } from '../entities';
 
 function notifyChannelForMR(
   author: Omit<UserSchema, 'created_at'>,
@@ -18,10 +18,10 @@ function notifyChannelForMR(
   channel.send({
     embeds: [
       new MessageEmbed()
-        .setTitle(`New merge request opened by ${author.username}`)
-        .setColor('#409bd7')
+        .setTitle(`Merge request closed by ${author.username}`)
+        .setColor(0xff0000)
         .setDescription(
-          `A new merge request has been opened on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
+          `A merge request has been closed on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
         )
         .setThumbnail(
           'https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png'
@@ -50,10 +50,10 @@ function notifyAssigneesForMR(
         user.send({
           embeds: [
             new MessageEmbed()
-              .setTitle(`Assigned on a merge request by ${author.username}`)
-              .setColor('#409bd7')
+              .setTitle(`Merge request closed by ${author.username}`)
+              .setColor(0xff0000)
               .setDescription(
-                `A new merge request has been opened on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
+                `A merge request has been closed on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
               )
               .setThumbnail(
                 'https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png'
@@ -68,14 +68,14 @@ function notifyAssigneesForMR(
   });
 }
 
-const mrCreatedHandler: EventHandler = async (
-  payload: EventPayload<MrOpenedWebhookPayload>
-) => {
-  const { object_attributes: mr, project, assignees } = payload.data;
-
+export default async function handlerMrClosed(
+  payload: EventPayload<MrClosedWebhookPayload>
+) {
+  const { project, object_attributes: mr, assignees } = payload.data;
   const author = await gitlabClient.Users.show(mr.author_id);
   const isDraft = mr.title.includes('Draft:');
 
+  // Don't notify for drafted merge request
   if (!isDraft) {
     notifyChannelForMR(author, project.name, mr.title, mr.url);
 
@@ -91,6 +91,4 @@ const mrCreatedHandler: EventHandler = async (
   } else {
     console.log(`Skipping merge request ${mr.id} because it is drafted`);
   }
-};
-
-export default mrCreatedHandler;
+}

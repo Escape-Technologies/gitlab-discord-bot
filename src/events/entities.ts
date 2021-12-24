@@ -1,6 +1,7 @@
 export enum EventName {
   MR_OPENED = 'mr-opened',
-  MR_UPDATED = 'mr-updated'
+  MR_UPDATED = 'mr-updated',
+  MR_CLOSED = 'mr-closed'
 }
 
 export interface EventPayload<T = any> {
@@ -8,8 +9,3 @@ export interface EventPayload<T = any> {
 }
 
 export type EventHandler = (payload: EventPayload) => Promise<void> | void;
-
-export interface MrCreatedEventPayload {
-  mrId: number;
-  projectId: number;
-}

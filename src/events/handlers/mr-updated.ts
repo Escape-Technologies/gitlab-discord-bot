@@ -59,6 +59,8 @@ function notifyAssignees(
               )
           ]
         });
+      } else {
+        console.log(`User ${id} not in cache`);
       }
     });
   });

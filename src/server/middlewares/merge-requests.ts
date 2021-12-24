@@ -1,5 +1,7 @@
 import bus from '../../events';
 import { EventName } from '../../events/entities';
+import { MrClosedWebhookPayload } from '../dtos/mr-closed.interface';
+import { MrOpenedWebhookPayload } from '../dtos/mr-opened.interface';
 import { MrUpdateWebhookPayload } from '../dtos/mr-updated.interface';
 import { WebhookRequest } from '../server';
 
@@ -13,30 +15,35 @@ function shouldHandle(req: WebhookRequest) {
 
 // @TODO make this standardized, using class validator or anything else
 function validatePayload(req: WebhookRequest) {
-  const { project, object_attributes } = req.body;
-  return object_attributes && project;
+  const { object_attributes } = req.body;
+  return object_attributes;
 }
 
 function handleMR(req: WebhookRequest) {
-  const { project, object_attributes } = req.body;
-  const { action, id } = object_attributes;
+  const { object_attributes } = req.body;
+  const { action } = object_attributes;
   console.log(`received mr event with action ${action}`);
 
   if (action === 'open' || action === 'reopen') {
-    const data = { projectId: project.id, mrId: id };
-    console.log(`emitting event "${EventName.MR_OPENED}" with payload`);
-    console.log(data);
-    bus.emit(EventName.MR_OPENED, {
-      data
+    const body = req.body as MrOpenedWebhookPayload;
+    console.log(`emitting event "${EventName.MR_OPENED}"`);
+    bus.emit<MrOpenedWebhookPayload>(EventName.MR_OPENED, {
+      data: body
     });
   }
 
   if (action === 'update') {
     const body = req.body as MrUpdateWebhookPayload;
-    const data = { projectId: project.id, mrId: id };
-    console.log(`emitting event "${EventName.MR_UPDATED}" with payload`);
-    console.log(data);
+    console.log(`emitting event "${EventName.MR_UPDATED}"`);
     bus.emit<MrUpdateWebhookPayload>(EventName.MR_UPDATED, {
+      data: body
+    });
+  }
+
+  if (action === 'close') {
+    const body = req.body as MrClosedWebhookPayload;
+    console.log(`emitting event "${EventName.MR_CLOSED}"`);
+    bus.emit<MrClosedWebhookPayload>(EventName.MR_CLOSED, {
       data: body
     });
   }
