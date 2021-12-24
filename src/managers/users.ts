@@ -1,4 +1,5 @@
 import airtableClient from '../utils/airtable-client';
+import logger from '../utils/logger';
 
 export interface StoredUser {
   gitlabId: string;
@@ -10,7 +11,7 @@ export class UserManager {
   _store = new Map<string, StoredUser>();
 
   async init() {
-    console.log('Initializing mapping');
+    logger.info('Initializing mapping');
     const records = await airtableClient.getRecords();
 
     records.forEach((record) => {
@@ -28,7 +29,7 @@ export class UserManager {
           watchers: new Set([discordId])
         });
       }
-      console.log(`${discordId} <-> ${gitlabId} <-> ${record.id}`);
+      logger.info(`${discordId} <-> ${gitlabId} <-> ${record.id}`);
     });
   }
 

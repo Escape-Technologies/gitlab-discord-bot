@@ -1,5 +1,6 @@
 import bus from '../../events';
 import { EventName } from '../../events/entities';
+import logger from '../../utils/logger';
 import { MrClosedWebhookPayload } from '../dtos/mr-closed.interface';
 import { MrOpenedWebhookPayload } from '../dtos/mr-opened.interface';
 import { MrUpdateWebhookPayload } from '../dtos/mr-updated.interface';
@@ -22,11 +23,11 @@ function validatePayload(req: WebhookRequest) {
 function handleMR(req: WebhookRequest) {
   const { object_attributes } = req.body;
   const { action } = object_attributes;
-  console.log(`received mr event with action ${action}`);
+  logger.info(`Received mr event with action ${action}`);
 
   if (action === 'open' || action === 'reopen') {
     const body = req.body as MrOpenedWebhookPayload;
-    console.log(`emitting event "${EventName.MR_OPENED}"`);
+    logger.info(`Emitting event "${EventName.MR_OPENED}"`);
     bus.emit<MrOpenedWebhookPayload>(EventName.MR_OPENED, {
       data: body
     });
@@ -34,7 +35,7 @@ function handleMR(req: WebhookRequest) {
 
   if (action === 'update') {
     const body = req.body as MrUpdateWebhookPayload;
-    console.log(`emitting event "${EventName.MR_UPDATED}"`);
+    logger.info(`Emitting event "${EventName.MR_UPDATED}"`);
     bus.emit<MrUpdateWebhookPayload>(EventName.MR_UPDATED, {
       data: body
     });
@@ -42,7 +43,7 @@ function handleMR(req: WebhookRequest) {
 
   if (action === 'close') {
     const body = req.body as MrClosedWebhookPayload;
-    console.log(`emitting event "${EventName.MR_CLOSED}"`);
+    logger.info(`Emitting event "${EventName.MR_CLOSED}"`);
     bus.emit<MrClosedWebhookPayload>(EventName.MR_CLOSED, {
       data: body
     });

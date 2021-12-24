@@ -7,7 +7,7 @@ async function main() {
   await userManager.init();
   await bot.start();
   await server.listen(env.serverPort);
-  //bot.hello();
+  bot.hello();
 }
 
 main();

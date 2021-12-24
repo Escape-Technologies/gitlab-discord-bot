@@ -3,6 +3,7 @@ import bot from '../../bot';
 import { userManager } from '../../managers';
 import { MrUpdateWebhookPayload } from '../../server/dtos/mr-updated.interface';
 import gitlabClient from '../../utils/gitlab-client';
+import logger from '../../utils/logger';
 import { EventPayload } from '../entities';
 
 function notifyUndraftedMergeRequest(
@@ -39,14 +40,14 @@ function notifyAssignees(
   repositoryName: string
 ) {
   gitlabIds.forEach(async (gitlabId: any) => {
-    console.log(`notifying watchers of assignee ${gitlabId}`);
+    logger.info(`Notifying watchers of assignee ${gitlabId}`);
     const stored = await userManager.get(gitlabId);
     const idsToNotify = stored?.watchers || [];
     idsToNotify.forEach((id: string) => {
-      console.log(`notifying  ${id}`);
+      logger.info(`Notifying  ${id}`);
       const user = bot._bot.users.cache.get(id);
       if (user) {
-        console.log(`notifying user ${id} for mr ${mrTitle}`);
+        logger.info(`Notifying user ${id} for mr ${mrTitle}`);
         user.send({
           embeds: [
             new MessageEmbed()
@@ -60,7 +61,7 @@ function notifyAssignees(
           ]
         });
       } else {
-        console.log(`User ${id} not in cache`);
+        logger.warn(`User ${id} not in cache`);
       }
     });
   });

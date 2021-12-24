@@ -61,7 +61,7 @@ Starts the build version of the code, by running `node dist/main.js`.
 ### `Build the docker container`
 This builds the container in a local image named `bot-local`
 
-`docker build -t bot-local -f docker/Dockerfile .`
+`docker build -t bot-local .`
 
 ### `Run the docker container`
 This runs the local image named of `bot-local`, using the environment specified in `.env`

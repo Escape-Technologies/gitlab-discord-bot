@@ -8,6 +8,7 @@ import {
   User
 } from 'discord.js';
 import { env } from '../utils/environment';
+import logger from '../utils/logger';
 import { MessageContext, MessageContextStore } from './context';
 import { handleMessage } from './listeners/message';
 
@@ -42,7 +43,7 @@ export class GitlabBot {
     )) as TextChannel;
     this.guild = this._bot.guilds.cache.get(this.mrChannel.guildId);
     await this.guild?.members.fetch();
-    console.log('succesfully logged in');
+    logger.info('Succesfully logged in');
   }
 
   hello() {
