@@ -9,26 +9,26 @@ export interface StoredUser {
 export class UserManager {
   _store = new Map<string, StoredUser>();
 
-  constructor() {
-    airtableClient.getRecords().then((records) => {
-      console.log('Initialized mapping');
-      records.forEach((record) => {
-        const { gitlabId, discordId } = record.fields as {
-          gitlabId: string;
-          discordId: string;
-        };
-        const stored = this._store.get(gitlabId);
-        if (stored) {
-          stored.watchers.add(discordId);
-        } else {
-          this._store.set(gitlabId, {
-            gitlabId,
-            recordId: record.id,
-            watchers: new Set([discordId])
-          });
-        }
-        console.log(`${discordId} <-> ${gitlabId} <-> ${record.id}`);
-      });
+  async init() {
+    console.log('Initializing mapping');
+    const records = await airtableClient.getRecords();
+
+    records.forEach((record) => {
+      const { gitlabId, discordId } = record.fields as {
+        gitlabId: string;
+        discordId: string;
+      };
+      const stored = this._store.get(gitlabId);
+      if (stored) {
+        stored.watchers.add(discordId);
+      } else {
+        this._store.set(gitlabId, {
+          gitlabId,
+          recordId: record.id,
+          watchers: new Set([discordId])
+        });
+      }
+      console.log(`${discordId} <-> ${gitlabId} <-> ${record.id}`);
     });
   }
 

@@ -1,5 +1,6 @@
 import {
   Client,
+  Guild,
   Intents,
   Message,
   MessageEmbed,
@@ -12,15 +13,17 @@ import { handleMessage } from './listeners/message';
 
 export class GitlabBot {
   _bot: Client;
-  user: User | null = null;
-  mrChannel: TextChannel | null = null;
+  user?: User | null = null;
+  mrChannel?: TextChannel;
+  guild?: Guild;
 
   constructor() {
     const bot = new Client({
       intents: [
         Intents.FLAGS.DIRECT_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILDS
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MEMBERS
       ],
       partials: ['CHANNEL']
     });
@@ -37,6 +40,8 @@ export class GitlabBot {
     this.mrChannel = (await this._bot.channels.fetch(
       env.mrsChannelId
     )) as TextChannel;
+    this.guild = this._bot.guilds.cache.get(this.mrChannel.guildId);
+    await this.guild?.members.fetch();
     console.log('succesfully logged in');
   }
 

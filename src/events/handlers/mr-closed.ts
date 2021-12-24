@@ -53,7 +53,7 @@ function notifyAssigneesForMR(
               .setTitle(`Merge request closed by ${author.username}`)
               .setColor(0xff0000)
               .setDescription(
-                `A merge request has been closed on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
+                `A merge request on which you were assigned has been closed on repository **${projectName}**.\n\n**[${mrTitle}](${mrUrl})**`
               )
               .setThumbnail(
                 'https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png'
