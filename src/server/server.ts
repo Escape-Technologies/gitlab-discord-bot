@@ -1,6 +1,7 @@
 import express from 'express';
 import logger from '../utils/logger';
 import mrMiddleware from './middlewares/merge-requests';
+import notesMiddleware from './middlewares/notes';
 
 export type WebhookRequest = Express.Request & { body: any };
 
@@ -19,6 +20,7 @@ export class GitlabServer {
       return next();
     });
     app.use(mrMiddleware);
+    app.use(notesMiddleware);
   }
 
   async listen(port: number) {

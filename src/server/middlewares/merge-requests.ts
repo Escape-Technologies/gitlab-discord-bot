@@ -50,10 +50,15 @@ function handleMR(req: WebhookRequest) {
   }
 }
 
-const mrMiddleware = (req: WebhookRequest) => {
+const mrMiddleware = (
+  req: WebhookRequest,
+  _res: Express.Response,
+  next: CallableFunction
+) => {
   if (shouldHandle(req) && validatePayload(req)) {
     handleMR(req);
   }
+  next();
 };
 
 export default mrMiddleware;

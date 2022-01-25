@@ -6,6 +6,7 @@ const logger = winston.createLogger({
   format: winston.format.json(),
   transports: [
     new winston.transports.Console({
+      level: env.logLevel,
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.colorize(),
@@ -22,6 +23,7 @@ if (env.logFile) {
   logger.add(
     new winston.transports.File({
       filename: env.logFile,
+      level: env.logLevel,
       format: winston.format.json()
     })
   );

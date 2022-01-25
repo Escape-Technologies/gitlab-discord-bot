@@ -12,6 +12,8 @@ MRS_CHANNEL_ID=<The id in discord of the channel receiving messages for MRs>
 GITLAB_PROJECT_ID=<The id of the project watched in Gitlab>
 AIRTABLE_CONFIG=<The variables used to connect to the airtable API under the format base:apiKey:tableName>
 SERVER_PORT=4556
+LOG_FILE=output.log
+LOG_LEVEL=info
 ````
 
 ### `GITLAB_TOKEN`
