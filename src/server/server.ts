@@ -25,7 +25,7 @@ export class GitlabServer {
     return new Promise((resolve, reject) => {
       this._app
         .listen(port, () => {
-          logger.info('Server listening on port', port);
+          logger.info(`Server listening on port: ${port}`);
           resolve(void 0);
         })
         .on('error', (err) => reject(err));

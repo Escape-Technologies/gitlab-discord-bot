@@ -9,7 +9,6 @@ The bot works out-of-the-box, however, you need some configuration for it.
 GITLAB_TOKEN=<Your gitlab API key>
 BOT_TOKEN=<Your discord token>
 MRS_CHANNEL_ID=<The id in discord of the channel receiving messages for MRs>
-GITLAB_PROJECT_ID=<The id of the project watched in Gitlab>
 AIRTABLE_CONFIG=<The variables used to connect to the airtable API under the format base:apiKey:tableName>
 SERVER_PORT=4556
 ````
@@ -29,9 +28,6 @@ The bot needs specific intents to run, correctly, you will need to grant the fol
 
 ### `MRS_CHANNEL_ID`
 After enabling the [application test mode](https://discord.com/developers/docs/game-sdk/store#application-test-mode), you just have to roght-click on a channel, and select `Copy Id`
-
-### `GITLAB_PROJECT_ID`
-You can copy this id from the homepage of your project on Gitlab.
 
 ### `AIRTABLE_CONFIG`
 In order for persistence to be active, the bot connects onto an Airtable page. More adapter will be developed in the future and this process will be standardized so that you can develop your own adapters.
