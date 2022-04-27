@@ -1,49 +1,53 @@
 {
-  "name": "gitlab-discord-bot",
-  "version": "1.0.0",
-  "description": "The V2 of the discord bot",
-  "main": "index.js",
-  "scripts": {
-    "start": "node dist/main.js",
-    "start:dev": "nodemon",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"{src,test}/**/*.{ts,js,json}\"",
-    "format:check": "prettier -c \"{src,test}/**/*.{ts,js,json}\"",
-    "lint": "eslint \"{src,test}/**/*.{ts,js}\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/escape.tech/gitlab-discord-bot.git"
-  },
-  "keywords": [],
+  "name": "nest-starter",
+  "version": "0.0.1",
+  "description": "",
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/escape.tech/gitlab-discord-bot/issues"
+  "private": true,
+  "license": "UNLICENSED",
+  "volta": {
+    "node": "16.14.2",
+    "yarn": "1.22.18"
   },
-  "homepage": "https://gitlab.com/escape.tech/gitlab-discord-bot#readme",
-  "devDependencies": {
-    "@escape.tech/mookme": "^1.1.0",
-    "@types/express": "^4.17.13",
-    "@types/node": "^16.11.12",
-    "@typescript-eslint/eslint-plugin": "^5.7.0",
-    "@typescript-eslint/parser": "^5.7.0",
-    "discord.js": "^13.3.1",
-    "eslint": "^8.4.1",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.3"
+  "packageManager": "yarn@3.2.0",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "start": "NODE_PATH=dist/ node dist/app/main.js",
+    "dev": "yarn tsnd -r tsconfig-paths/register --watch src --transpile-only --exit-child src/main.ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@gitbeaker/node": "^35.1.0",
-    "airtable": "^0.11.1",
-    "axios": "^0.24.0",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.2",
-    "winston": "^3.3.3"
+    "@gitbeaker/node": "^35.6.0",
+    "@nestjs/common": "^8.4.4",
+    "@nestjs/core": "^8.0.0",
+    "@nestjs/platform-express": "^8.0.0",
+    "@prisma/client": "3.12.0",
+    "@steffthestunt/hellog": "^1.2.10",
+    "class-validator": "^0.13.2",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "prisma": "^3.12.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.5"
+  },
+  "devDependencies": {
+    "@escape.tech/mookme": "2.2.0-beta.2",
+    "@nestjs/testing": "^8.0.0",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.24",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
+    "supertest": "^6.2.2",
+    "ts-node": "^10.7.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "^4.6.3"
   }
 }

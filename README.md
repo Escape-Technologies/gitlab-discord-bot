@@ -1,9 +1,8 @@
-# Gitlab-Discord bot
+# NestJS starter
 
-The V2 of the discord bot
+A starter repository for a NestJS application, but not using it's CLI. Instead, the transpilation and the dev server are handled only by the typescript compiler `tsc` and `ts-node-dev`.
 
-## Get started
-The bot works out-of-the-box, however, you need some configuration for it.
+Running the application only goes down to the two essential steps:
 
 ````=txt
 GITLAB_TOKEN=<Your gitlab API key>
@@ -13,12 +12,12 @@ AIRTABLE_CONFIG=<The variables used to connect to the airtable API under the for
 SERVER_PORT=4556
 ````
 
-### `GITLAB_TOKEN`
+The rest can be done however you like.
 
-To get one, go to your [user's access token settings page](https://gitlab.com/-/profile/personal_access_tokens) and generate the token. It will be **attached to your own gitlab account** and is used to fetch data from the repository.
+- You can replace `tsc` with another transpiler, like `swc`
+- You can use any watcher that you want, like nodemon
 
-### `BOT_TOKEN`
-To get one, go the [discord developer portal](https://discord.com/developers/applications) and create an application, then a bot. On your application, under the `bot` menu, click on *Click to reveal token* and copy paste this value.
+## Build
 
 **Important note on intents**
 The bot needs specific intents to run, correctly, you will need to grant the following intents on this page as well:

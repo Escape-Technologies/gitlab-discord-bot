@@ -2,11 +2,11 @@
   "steps": [
     {
       "name": "eslint",
-      "command": "npm run lint"
+      "command": "yarn lint"
     },
     {
       "name": "prettier",
-      "command": "npm run format:check"
+      "command": "yarn format:check"
     }
   ]
 }
