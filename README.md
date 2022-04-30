@@ -4,58 +4,55 @@ A Discord bot able to track several updates (like merge requests, notes, approva
 
 It can also notify you in a private channel for updates regarding a specific user on Gitlab.
 
-## Configuration
+## Features
 
-**Important note on intents**
-The bot needs specific intents to run, correctly, you will need to grant the following intents on this page as well:
+### Register to the bot and track a specific Gitlab user
 
-- `Presence Intent`
-- `Server Members Intent`
-- `Message Content Intent`
+You can ask the bot to send you notifications when stuff concerning a specific gitlab user happen. For instance, you can ask the bot to notify you in a private message when someone creates a merge request, or when someone answers to a merge requests openend by a specific user.
 
-## Required environment
+<!-- markdownlint-disable -->
+*Register your gitlab Username and watch it (by default)*
 
-````=txt
-DATABASE_URL="postgresql://postgres:password@localhost:5432/bot?schema=public"
-GITLAB_TOKEN=<Your gitlab API key>
-SERVER_PORT=<The port on which the server should listen, defaults to 8080>
-BOT_TOKEN=<Your discord token>
-MRS_CHANNEL_ID=<The id in discord of the channel receiving messages for MRs>
-````
+<img src="./docs/assets/register-example.png" alt="Example of /register command" width="600"/>
 
-### `MRS_CHANNEL_ID`
+*Watch a custom Gitlab username*
 
-After enabling the [application test mode](https://discord.com/developers/docs/game-sdk/store#application-test-mode), you just have to roght-click on a channel, and select `Copy Id`
+<img src="./docs/assets/watch-example.png" alt="Example of /watch command" width="600"/>
 
+*Stop watching a custom Gitlab username*
 
-## Add the bot to your server
+<img src="./docs/assets/drop-example.png" alt="Example of /drop command" width="600"/>
+<!-- markdownlint-enable -->
 
-Go to [this page](https://discord.com/oauth2/authorize?client_id=920025554126794772&permissions=277025410048&scope=bot%20applications.commands) and select the server on which you want the bot to participate, and authorize it.
+### Track merge requests in a common channel and in private channel
 
-## Commands
+<!-- markdownlint-disable -->
+*Notification for an opened merge request in a shared channel*
 
-### `yarn dev`
+<img src="./docs/assets/merge-request-opened-example.png" alt="Example of notification sent when a merge request is opened" width="600"/>
 
-Starts a local development server, with hot reload, listening either on the sport specified by `$SERVER_PORT`, or on port 8080.
+*Notification for a closed merge request in a shared channel*
 
-### `yarn build`
+<img src="./docs/assets/merge-request-closed-example.png" alt="Example of notification sent when a merge request is closed" width="600"/>
 
-Transpiles the TS code inside of the `src` folder into JS code, into the `dist` folder.
+*Notification for an assignment on a merge request*
 
-### `yarn start`
+<img src="./docs/assets/assigned-on-merge-request-example.png" alt="Example of notification sent when I am assigned on a merge request" width="600"/>
+<!-- markdownlint-enable -->
 
-Starts the build version of the code, by running `node dist/main.js`.
+### Track notes and discussions opened on your merge requests
 
-### `Build the docker container`
+<!-- markdownlint-disable -->
+*Notification for when a discussion is opened on your merge requests, or when a discussion you are a part of receives an answer*
 
-This builds the container in a local image named `bot-local`
+<img src="./docs/assets/note-received-example.png" alt="Example of notification regarding discussions and notes" width="600"/>
+<!-- markdownlint-enable -->
 
-`docker build -t discord-bot -f Dockerfile .`
+## Installation
 
-### `Run the docker container`
+This free-of-charge, open source software is provided as it is, and you are responsible for hosting it.
+It requires some infrastructure to work properly, but we tried to document these requirements in the following documentation.
 
-This runs the local image named of `discord-bot`, using the environment specified in `.env`
+[See the requirements and necessary setup](./docs/requirements.md)
 
-**Please make sure that the ports binding matches the port specified in the `.env` file !**
-
-`docker run --env-file .env -d -p 4566:4566 --network host  discord-bot`
+If you lack information on this part, please feel free to open an issue and we will be happy to provide you with the missing details :) Happy botting !
