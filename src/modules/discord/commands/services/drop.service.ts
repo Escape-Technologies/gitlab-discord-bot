@@ -18,7 +18,7 @@ export class DropCommandService {
       };
     }
 
-    logger.log(`Running watch command with gitlab user ${toUnwatch}`);
+    logger.log(`Running drop command with gitlab user ${toUnwatch}`);
     try {
       const user = await this.db.user.findUnique({
         where: {

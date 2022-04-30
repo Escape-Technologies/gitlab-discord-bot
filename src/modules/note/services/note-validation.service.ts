@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class NoteValidationService {
   shouldHandle(body: any) {
-    return body && body.object_kind === 'notes';
+    return body && body.object_kind === 'note';
   }
 
   // @TODO make this standardized, using class validator or anything else

@@ -1,23 +1,26 @@
 import { Controller, Post, Req } from '@nestjs/common';
-import { logger } from 'app/libs/logger';
+import { NoteReceivedWebhookPayload } from 'app/libs/gitlab/dtos/note-received.interface';
+import { NoteReceivedService } from './services/note-received.service';
 import { NoteValidationService } from './services/note-validation.service';
 
 type WebhookRequest = Express.Request & { body: any };
 
 @Controller('/note')
 export class NoteController {
-  constructor(private readonly noteValidationService: NoteValidationService) {}
+  constructor(
+    private readonly noteValidationService: NoteValidationService,
+    private readonly noteReceivedService: NoteReceivedService,
+  ) {}
 
   @Post()
   async onNoteWebhook(@Req() req: WebhookRequest) {
-    console.log(req.body);
     if (
       this.noteValidationService.shouldHandle(req.body) &&
       this.noteValidationService.validatePayload(req.body)
     ) {
-      const { object_attributes } = req.body;
-      const { action } = object_attributes;
-      logger.log(`Received mr event with action ${action}`);
+      this.noteReceivedService.handleNoteReceived(
+        req.body as NoteReceivedWebhookPayload,
+      );
     }
   }
 }

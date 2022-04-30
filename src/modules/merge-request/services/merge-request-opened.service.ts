@@ -71,7 +71,7 @@ export class MergeRequestOpenedService {
         .map((tracker) => tracker.user.discordId);
 
       for (const id of idsToNotify) {
-        logger.log(`Notifying  ${id}`);
+        logger.log(`Notifying ${id}`);
         const user = this.discord.users.cache.get(id);
         if (user) {
           logger.log(`Notifying user ${id} for mr ${mrTitle}`);
