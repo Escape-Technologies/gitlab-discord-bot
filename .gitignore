@@ -6,3 +6,6 @@ dist
 
 # Log files
 *.log
+
+# Others
+.DS_Store
