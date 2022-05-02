@@ -13,7 +13,7 @@ async function bootstrap() {
 
   await app.listen(env.serverPort, () => {
     logger.success(`Server listening on port ${env.serverPort}`);
-    // bot.hello();
+    bot.hello();
   });
 }
 
