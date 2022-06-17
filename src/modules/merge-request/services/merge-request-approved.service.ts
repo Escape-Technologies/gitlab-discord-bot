@@ -22,7 +22,6 @@ export class MergeRequestApprovedService {
     mrTitle: string,
     mrUrl: string,
   ) {
-    author.username = 'Mr. Bot';
     for (const gitlabUsername of gitlabUsernames) {
       logger.log(
         `Notifying assignee ${gitlabUsername} for '${projectName}/${mrTitle}' approval`,
