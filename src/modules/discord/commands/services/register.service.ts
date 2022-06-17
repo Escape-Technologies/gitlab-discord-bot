@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { logger } from 'app/libs/logger';
 import { DatabaseClient } from 'app/modules/database/database.service';
+import { CommandResult } from 'app/modules/discord/commands/entities';
 import { Message } from 'discord.js';
 
 @Injectable()
