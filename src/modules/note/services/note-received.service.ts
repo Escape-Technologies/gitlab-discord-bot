@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GitlabClient } from 'app/libs/gitlab/client';
+import { User } from 'app/libs/gitlab/dtos/common';
 import { NoteReceivedWebhookPayload } from 'app/libs/gitlab/dtos/note-received.interface';
 import { DatabaseClient } from 'app/modules/database/database.service';
 import { DiscordService } from 'app/modules/discord/discord.service';
@@ -15,6 +16,51 @@ export class NoteReceivedService {
     private readonly discord: DiscordService,
   ) {}
 
+  async notifyInvolvedUsers(
+    messageEmbed: MessageEmbed,
+    author: User,
+    involvedUsernames: string[],
+  ) {
+    for (const gitlabUsername of involvedUsernames) {
+      if (gitlabUsername === author.username) {
+        continue;
+      }
+
+      this.logger.log(`Notifying user ${gitlabUsername} for note received`);
+
+      author.username = 'sss';
+
+      const trackers = await this.db.tracker.findMany({
+        where: {
+          gitlabUsername,
+        },
+        include: { user: true },
+      });
+
+      const idsToNotify = trackers
+        .filter(
+          (tracker) =>
+            !(
+              tracker.gitlabUsername === author.username &&
+              tracker.user.gitlabUsername === author.username
+            ),
+        )
+        .map((tracker) => tracker.user.discordId);
+
+      for (const id of idsToNotify) {
+        const user = this.discord.users.cache.get(id);
+        if (user) {
+          this.logger.log(`Sending message to user ${user.username}`);
+          user.send({
+            embeds: [messageEmbed],
+          });
+        } else {
+          this.logger.warn(`User ${id} not in cache`);
+        }
+      }
+    }
+  }
+
   /**
    * Handle the gitlab webhook for a note being added to a merge request.
    * @param payload The payload received from Gitlab for this event
@@ -23,17 +69,24 @@ export class NoteReceivedService {
   async handleNoteReceived(payload: NoteReceivedWebhookPayload) {
     const {
       object_attributes: note,
-      merge_request: mergeRequest,
       project_id: projectId,
       user: author,
     } = payload;
 
-    const discussion = await this.gitlab.MergeRequestDiscussions.show(
+    const mergeRequest = await this.gitlab.MergeRequests.show(
       projectId,
-      mergeRequest.iid,
-      //@ts-expect-error error
-      note.discussion_id,
+      payload.merge_request.iid,
     );
+
+    const assigneesUsernames = mergeRequest.assignees.map(
+      (assignee) => assignee.username,
+    ) as string[];
+    const reviewersUsernames = mergeRequest.reviewers.map(
+      (reviewer) => reviewer.username,
+    ) as string[];
+
+    const involvedUsersUsernames =
+      assigneesUsernames.concat(reviewersUsernames);
 
     const messageEmbed = this.buildEmbed(
       author.username,
@@ -42,14 +95,7 @@ export class NoteReceivedService {
       mergeRequest,
     );
 
-    if (!discussion.notes || discussion.notes.length === 1) {
-      if (author.id === note.author_id) {
-        return;
-      }
-      this.notifyStandaloneMessageAuthor(author.username, messageEmbed);
-    } else {
-      this.notifyDiscussionMembers(discussion, messageEmbed);
-    }
+    this.notifyInvolvedUsers(messageEmbed, author, involvedUsersUsernames);
   }
 
   /**
@@ -82,97 +128,5 @@ export class NoteReceivedService {
         text: `You received this notification, because the Gitlab username "${trackerGitlabUsername}" is involved in a discussion on merge request !${mergeRequest.iid}, which received a new comment.`,
       })
       .setTimestamp();
-  }
-
-  /**
-   * Send notifications when a new discussion is opened on a merge request.
-   * This fuction sends a discord private message to every user tracking the author of a merge request
-   *
-   * @param mrAuthorUsername The Gitlab username of the author of the merge request
-   * @param messageEmbed  The embed to send to the trackers of the mr author
-   */
-  async notifyStandaloneMessageAuthor(
-    mrAuthorUsername: string,
-    messageEmbed: MessageEmbed,
-  ) {
-    const idsToNotify = await this.db.tracker.findMany({
-      where: {
-        gitlabUsername: mrAuthorUsername,
-      },
-      include: {
-        user: true,
-      },
-    });
-
-    for (const tracker of idsToNotify) {
-      const user = this.discord.users.cache.get(tracker.user.discordId);
-      if (user) {
-        user.send({
-          embeds: [messageEmbed],
-        });
-      } else {
-        this.logger.warn(`Discord user ${tracker.userId} not found`);
-      }
-    }
-  }
-
-  /**
-   * Send notifications when a running discussion receives a note on a merge request.
-   * This fuction sends a discord private message to every user tracking every member of the discussion,
-   * excepted the one who published the last note in the discussion
-   *
-   * @param discussion The Gitlab discussion which received a new note
-   * @param messageEmbed  The embed to send to the trackers of the mr author
-   */
-  async notifyDiscussionMembers(
-    discussion: DiscussionSchema,
-    messageEmbed: MessageEmbed,
-  ) {
-    if (!discussion.notes || discussion.notes.length === 1) {
-      throw new Error(
-        `Received a discussion object with less than 2 notes: discussion.notes = ${discussion.notes}`,
-      );
-    }
-
-    // Retrieve the last message
-    const lastNote = discussion.notes.pop();
-
-    // Define user to notify: In the case of a running discussion, we notify everyone but the last author
-    // of a message in the discussion
-    const allDiscussionMembers: string[] = discussion.notes
-      .map((message) => message.author.username as string)
-      .filter((username) => username !== lastNote.author.username);
-    const uniqueDiscussionMembers = [...new Set(allDiscussionMembers)];
-
-    // Retrieve the before last message
-    const beforeLastNote = discussion.notes.pop();
-
-    const trackers = await this.db.tracker.findMany({
-      where: {
-        gitlabUsername: { in: uniqueDiscussionMembers },
-      },
-      include: {
-        user: true,
-      },
-    });
-
-    // Override the descripion of the default embed with a short history of the last messages being exchanged in the discussion
-    const message = `*[${beforeLastNote.created_at}] \`${beforeLastNote.author.username}\` said:*\n${beforeLastNote.body}\n*[${beforeLastNote.created_at}] \`${lastNote.author.username}\` said:*\n${lastNote.body}`;
-
-    // Send a notification to every tracker of the usernames we defined above
-    for (const tracker of trackers) {
-      messageEmbed.setDescription(message);
-      messageEmbed.setFooter({
-        text: `You received this notification, because the Gitlab username "${tracker.gitlabUsername}" is involved in a discussion, which received a new comment.`,
-      });
-      const user = this.discord.users.cache.get(tracker.user.discordId);
-      if (user) {
-        user.send({
-          embeds: [messageEmbed],
-        });
-      } else {
-        this.logger.warn(`Discord user ${tracker.userId} not found`);
-      }
-    }
   }
 }
