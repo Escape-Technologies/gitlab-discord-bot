@@ -1,4 +1,3 @@
-import { DiscussionSchema } from '@gitbeaker/core/dist/types/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { GitlabClient } from 'app/libs/gitlab/client';
 import { NoteReceivedWebhookPayload } from 'app/libs/gitlab/dtos/note-received.interface';
@@ -26,6 +25,7 @@ export class NoteReceivedService {
       object_attributes: note,
       merge_request: mergeRequest,
       project_id: projectId,
+      user: author,
     } = payload;
 
     const discussion = await this.gitlab.MergeRequestDiscussions.show(
@@ -35,24 +35,18 @@ export class NoteReceivedService {
       note.discussion_id,
     );
 
-    const mrAuthor = await this.gitlab.ProjectMembers.show(
-      projectId,
-      mergeRequest.author_id,
-    );
-
     const messageEmbed = this.buildEmbed(
-      mrAuthor.username,
-      mrAuthor.username,
+      author.username,
+      author.username,
       note,
       mergeRequest,
     );
 
     if (!discussion.notes || discussion.notes.length === 1) {
-      if (mrAuthor.id === note.author_id) {
+      if (author.id === note.author_id) {
         return;
       }
-
-      this.notifyStandaloneMessageAuthor(mrAuthor.username, messageEmbed);
+      this.notifyStandaloneMessageAuthor(author.username, messageEmbed);
     } else {
       this.notifyDiscussionMembers(discussion, messageEmbed);
     }
@@ -77,7 +71,7 @@ export class NoteReceivedService {
     mergeRequest: M,
   ) {
     return new MessageEmbed()
-      .setTitle(`New message received on a merge request !`)
+      .setTitle(`New note received on a merge request`)
       .setColor('#409bd7')
       .setURL(note.url)
       .setDescription(`*${authorUsername} said:*\n${note.description}`)
