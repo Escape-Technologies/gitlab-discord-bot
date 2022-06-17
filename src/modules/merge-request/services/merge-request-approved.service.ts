@@ -76,21 +76,14 @@ export class MergeRequestApprovedService {
     const { assignees, object_attributes, project } = payload;
 
     const author = await this.gitlab.Users.show(object_attributes.author_id);
-    const isDraft = object_attributes.title.includes('Draft:');
-    if (isDraft) {
-      logger.warn(
-        `Skipping merge request ${object_attributes.id} because it is drafted`,
+    if (assignees) {
+      this.notifyAssigneesForApproval(
+        assignees.map((a) => a.username),
+        author,
+        project.name,
+        object_attributes.title,
+        object_attributes.url,
       );
-    } else {
-      if (assignees) {
-        this.notifyAssigneesForApproval(
-          assignees.map((a) => a.username),
-          author,
-          project.name,
-          object_attributes.title,
-          object_attributes.url,
-        );
-      }
     }
   }
 }
