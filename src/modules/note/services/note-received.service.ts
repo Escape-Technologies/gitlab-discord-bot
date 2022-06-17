@@ -27,9 +27,6 @@ export class NoteReceivedService {
       }
 
       this.logger.log(`Notifying user ${gitlabUsername} for note received`);
-
-      author.username = 'sss';
-
       const trackers = await this.db.tracker.findMany({
         where: {
           gitlabUsername,
