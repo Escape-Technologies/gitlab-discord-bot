@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { logger } from 'app/libs/logger';
 import { DatabaseClient } from 'app/modules/database/database.service';
-import { CommandResult } from 'app/modules/discord/commands/entities';
 import { Message } from 'discord.js';
 
 @Injectable()
@@ -17,6 +16,25 @@ export class RegisterCommandService {
     if (!gitlabUsername) {
       return {
         error: `Invalid Gitlab username provided.`,
+      };
+    }
+
+    try {
+      const user = await this.db.user.findUnique({
+        where: {
+          discordId: discordUserId,
+        },
+      });
+
+      if (user) {
+        return {
+          error: `You are already registered`,
+        };
+      }
+    } catch (e) {
+      logger.error(e);
+      return {
+        error: `Could not fetch user`,
       };
     }
 
