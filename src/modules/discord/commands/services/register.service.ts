@@ -35,7 +35,7 @@ export class RegisterCommandService {
     } catch (e) {
       logger.error(e);
       return {
-        error: `Could not fetch user`,
+        error: `Could not fetch user ${discordUserId}`,
       };
     }
 
