@@ -72,7 +72,7 @@ export class MergeRequestApprovedService {
     }
   }
 
-  async handlerMergeRequestApproved(payload: MrApprovedWebhookPayload) {
+  async handleMergeRequestApproved(payload: MrApprovedWebhookPayload) {
     const { assignees, object_attributes, project } = payload;
 
     const author = await this.gitlab.Users.show(object_attributes.author_id);

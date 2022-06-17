@@ -45,14 +45,12 @@ export class MergeRequestController {
 
       if (action === 'close') {
         const body = req.body as MrClosedWebhookPayload;
-        await this.mergeRequestClosedService.handlerMergeRequestClosed(body);
+        await this.mergeRequestClosedService.handleMergeRequestClosed(body);
       }
 
       if (action === 'approved') {
         const body = req.body as MrApprovedWebhookPayload;
-        await this.mergeRequestApprovedService.handlerMergeRequestApproved(
-          body,
-        );
+        await this.mergeRequestApprovedService.handleMergeRequestApproved(body);
       }
     }
   }
