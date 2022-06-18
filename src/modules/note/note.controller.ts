@@ -1,5 +1,6 @@
 import { Controller, Post, Req } from '@nestjs/common';
 import { NoteReceivedWebhookPayload } from 'app/libs/gitlab/dtos/note-received.interface';
+import { logger } from 'app/libs/logger';
 import { NoteReceivedService } from './services/note-received.service';
 import { NoteValidationService } from './services/note-validation.service';
 
@@ -18,6 +19,8 @@ export class NoteController {
       this.noteValidationService.shouldHandle(req.body) &&
       this.noteValidationService.validatePayload(req.body)
     ) {
+      logger.log(`Received note event`);
+
       this.noteReceivedService.handleNoteReceived(
         req.body as NoteReceivedWebhookPayload,
       );

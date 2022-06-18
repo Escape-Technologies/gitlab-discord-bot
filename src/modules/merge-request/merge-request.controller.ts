@@ -1,8 +1,10 @@
 import { Controller, Post, Req } from '@nestjs/common';
+import { MrApprovedWebhookPayload } from 'app/libs/gitlab/dtos/mr-approved.interface';
 import { MrClosedWebhookPayload } from 'app/libs/gitlab/dtos/mr-closed.interface';
 import { MrOpenedWebhookPayload } from 'app/libs/gitlab/dtos/mr-opened.interface';
 import { MrUpdateWebhookPayload } from 'app/libs/gitlab/dtos/mr-updated.interface';
 import { logger } from 'app/libs/logger';
+import { MergeRequestApprovedService } from 'app/modules/merge-request/services/merge-request-approved.service';
 import { MergeRequestClosedService } from 'app/modules/merge-request/services/merge-request-closed.service';
 import { MergeRequestOpenedService } from 'app/modules/merge-request/services/merge-request-opened.service';
 import { MergeRequestUpdatedService } from 'app/modules/merge-request/services/merge-request-updated.service';
@@ -17,6 +19,7 @@ export class MergeRequestController {
     private readonly mergeRequestOpenedService: MergeRequestOpenedService,
     private readonly mergeRequestUpdatedService: MergeRequestUpdatedService,
     private readonly mergeRequestClosedService: MergeRequestClosedService,
+    private readonly mergeRequestApprovedService: MergeRequestApprovedService,
   ) {}
 
   @Post()
@@ -35,13 +38,19 @@ export class MergeRequestController {
       }
 
       if (action === 'update') {
+        console.log(req.body);
         const body = req.body as MrUpdateWebhookPayload;
         await this.mergeRequestUpdatedService.handleMrUpdatedWebhook(body);
       }
 
       if (action === 'close') {
         const body = req.body as MrClosedWebhookPayload;
-        await this.mergeRequestClosedService.handlerMergeRequestClosed(body);
+        await this.mergeRequestClosedService.handleMergeRequestClosed(body);
+      }
+
+      if (action === 'approved') {
+        const body = req.body as MrApprovedWebhookPayload;
+        await this.mergeRequestApprovedService.handleMergeRequestApproved(body);
       }
     }
   }

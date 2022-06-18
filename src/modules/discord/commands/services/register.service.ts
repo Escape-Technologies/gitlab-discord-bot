@@ -21,6 +21,25 @@ export class RegisterCommandService {
     }
 
     try {
+      const user = await this.db.user.findUnique({
+        where: {
+          discordId: discordUserId,
+        },
+      });
+
+      if (user) {
+        return {
+          error: `You are already registered`,
+        };
+      }
+    } catch (e) {
+      logger.error(e);
+      return {
+        error: `Could not fetch user ${discordUserId}`,
+      };
+    }
+
+    try {
       const user = await this.db.user.create({
         data: {
           discordId: discordUserId,

@@ -96,7 +96,7 @@ export class MergeRequestClosedService {
     });
   }
 
-  async handlerMergeRequestClosed(payload: MrClosedWebhookPayload) {
+  async handleMergeRequestClosed(payload: MrClosedWebhookPayload) {
     const { project, object_attributes: mr, assignees } = payload;
     const author = await this.gitlab.Users.show(mr.author_id);
     const isDraft = mr.title.includes('Draft:');
