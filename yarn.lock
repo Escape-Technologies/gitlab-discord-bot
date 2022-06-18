@@ -486,12 +486,12 @@ __metadata:
   linkType: hard
 
 "@types/node-fetch@npm:^2.5.12":
-  version: 2.6.1
-  resolution: "@types/node-fetch@npm:2.6.1"
+  version: 2.6.2
+  resolution: "@types/node-fetch@npm:2.6.2"
   dependencies:
     "@types/node": "*"
     form-data: ^3.0.0
-  checksum: a3e5d7f413d1638d795dff03f7b142b1b0e0c109ed210479000ce7b3ea11f9a6d89d9a024c96578d9249570c5fe5287a5f0f4aaba98199222230196ff2d6b283
+  checksum: 6f73b1470000d303d25a6fb92875ea837a216656cb7474f66cdd67bb014aa81a5a11e7ac9c21fe19bee9ecb2ef87c1962bceeaec31386119d1ac86e4c30ad7a6
   languageName: node
   linkType: hard
 
@@ -1506,7 +1506,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord.js@npm:^13.6.0":
+"discord.js@npm:13.6.0":
   version: 13.6.0
   resolution: "discord.js@npm:13.6.0"
   dependencies:
@@ -2976,7 +2976,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.19.0
     "@typescript-eslint/parser": ^5.19.0
     class-validator: ^0.13.2
-    discord.js: ^13.6.0
+    discord.js: 13.6.0
     dotenv: ^16.0.0
     eslint: ^8.13.0
     eslint-config-prettier: ^8.5.0
@@ -4347,8 +4347,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.4.0":
-  version: 8.5.0
-  resolution: "ws@npm:8.5.0"
+  version: 8.8.0
+  resolution: "ws@npm:8.8.0"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -4357,7 +4357,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 76f2f90e40344bf18fd544194e7067812fb1372b2a37865678d8f12afe4b478ff2ebc0c7c0aff82cd5e6b66fc43d889eec0f1865c2365d8f7a66d92da7744a77
+  checksum: 6ceed1ca1cb800ef60c7fc8346c7d5d73d73be754228eb958765abf5d714519338efa20ffe674167039486eb3a813aae5a497f8d319e16b4d96216a31df5bd95
   languageName: node
   linkType: hard
 
@@ -4390,8 +4390,8 @@ __metadata:
   linkType: hard
 
 "zod@npm:^3.11.6":
-  version: 3.14.4
-  resolution: "zod@npm:3.14.4"
-  checksum: 30e75dc1e4e1d6ce5695750d1906b6b918779b8aa446f5db77eb2b8344d08f29344b5d0115034a9e695fd5a627d23c5c03d67efe58fe16fbb91dee9dc08761bc
+  version: 3.17.3
+  resolution: "zod@npm:3.17.3"
+  checksum: f74b5d8a307cbed734e7a4a7f57a0c6b0a2d5062adee25e86eceaa1bec606621d6861804130f53342dec2d6e77fe9365f3a5118d55c81688f69f3de5fd3e59af
   languageName: node
   linkType: hard
