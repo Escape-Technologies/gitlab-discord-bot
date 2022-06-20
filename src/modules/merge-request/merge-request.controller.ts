@@ -38,7 +38,6 @@ export class MergeRequestController {
       }
 
       if (action === 'update') {
-        console.log(req.body);
         const body = req.body as MrUpdateWebhookPayload;
         await this.mergeRequestUpdatedService.handleMrUpdatedWebhook(body);
       }
