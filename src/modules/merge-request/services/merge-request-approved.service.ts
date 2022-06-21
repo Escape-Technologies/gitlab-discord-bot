@@ -24,7 +24,7 @@ export class MergeRequestApprovedService {
   ) {
     for (const gitlabUsername of gitlabUsernames) {
       logger.log(
-        `Notifying assignee ${gitlabUsername} for '${projectName}/${mrTitle}' approval`,
+        `Checking assignee ${gitlabUsername} for '${projectName}/${mrTitle}' approval`,
       );
 
       const trackers = await this.db.tracker.findMany({
@@ -34,21 +34,14 @@ export class MergeRequestApprovedService {
         include: { user: true },
       });
 
-      const idsToNotify = trackers
-        .filter(
-          (tracker) =>
-            !(
-              tracker.gitlabUsername === author.username &&
-              tracker.user.gitlabUsername === author.username
-            ),
-        )
-        .map((tracker) => tracker.user.discordId);
+      const idsToNotify = trackers.map((tracker) => tracker.user.discordId);
 
       for (const id of idsToNotify) {
-        logger.log(`Notifying ${id}`);
         const user = this.discord.users.cache.get(id);
         if (user) {
-          logger.log(`Notifying user ${id} for mr ${mrTitle}`);
+          logger.log(
+            `Sending notification to user ${id} for mr '${projectName}/${mrTitle}'`,
+          );
           user.send({
             embeds: [
               new MessageEmbed()
