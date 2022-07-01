@@ -5,4 +5,5 @@ export class GitlabClient extends Gitlab {}
 
 export const gitlabClient = new GitlabClient({
   token: env.gitlabToken,
+  host: env.gitlabHost,
 });
