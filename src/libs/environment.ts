@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export class Environment {
+  gitlabHost?: string;
   gitlabToken: string;
   botToken: string;
   mrsChannelId: string;
@@ -19,6 +20,8 @@ export class Environment {
         }
       },
     );
+
+    this.gitlabHost = process.env.GITLAB_HOST;
     this.gitlabToken = process.env.GITLAB_TOKEN!;
     this.botToken = process.env.BOT_TOKEN!;
     this.mrsChannelId = process.env.MRS_CHANNEL_ID!;

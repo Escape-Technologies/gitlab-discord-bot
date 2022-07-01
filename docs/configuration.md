@@ -7,6 +7,7 @@ This bot allows you to connect your Gitlab VCS to a Discord server. Thus, you ne
 ````=txt
 DATABASE_URL="postgresql://postgres:password@localhost:5432/bot?schema=public"
 GITLAB_TOKEN=<Your gitlab API key>
+GITLAB_HOST=<The host to your gitlab instance server>
 SERVER_PORT=<The port on which the server should listen, defaults to 8080>
 BOT_TOKEN=<Your discord token>
 MRS_CHANNEL_ID=<The id in discord of the channel receiving messages for MRs>
@@ -19,6 +20,12 @@ The url to your database. The bot is currently compatible with `PostgresSQL` onl
 ## `GITLAB_TOKEN`
 
 The access token you retrieved from Gitlab. See [setting up an access token from Gitlab](./requirements.md#gitlab-access-token).
+
+## `GITLAB_HOST`
+
+The hostname to your Gitlab server. It should be something like `https://gitlab.example.com`.
+
+In case you are not using a self-hosted Gitlab server, you can leave this empty.
 
 ## `SERVER_PORT`
 
