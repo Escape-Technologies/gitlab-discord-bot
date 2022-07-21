@@ -1,0 +1,12 @@
+# https://github.com/kentaro-m/auto-assign/
+addReviewers: true
+addAssignees: author
+
+reviewers:
+  - LMaxence
+  - c3b5aw
+
+skipKeywords:
+  - wip
+
+numberOfReviewers: 1
