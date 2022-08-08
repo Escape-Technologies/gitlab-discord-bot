@@ -37,6 +37,7 @@ export class DiscordService extends Client {
     });
 
     this.on('messageCreate', this.handleMessage);
+    this.on('guildCreate', this.hello);
   }
 
   async start() {
