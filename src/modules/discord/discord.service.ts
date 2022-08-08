@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { env } from 'app/libs/environment';
 import { logger } from 'app/libs/logger';
+import { DatabaseClient } from 'app/modules/database/database.service';
 import { CommandResult } from 'app/modules/discord/commands/entities';
 import { DropCommandService } from 'app/modules/discord/commands/services/drop.service';
 import { RegisterCommandService } from 'app/modules/discord/commands/services/register.service';
@@ -21,6 +22,7 @@ export class DiscordService extends Client {
   guild?: Guild;
 
   constructor(
+    private readonly database: DatabaseClient,
     private readonly dropCommand: DropCommandService,
     private readonly registerCommand: RegisterCommandService,
     private readonly watchCommand: WatchCommandService,
@@ -37,6 +39,11 @@ export class DiscordService extends Client {
     });
 
     this.on('messageCreate', this.handleMessage);
+    this.database.user.count().then((count) => {
+      if (count === 0) {
+        this.hello();
+      }
+    });
   }
 
   async start() {
