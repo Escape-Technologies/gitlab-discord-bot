@@ -1,5 +1,6 @@
 node_modules
 dist
+.yarn/cache
 
 # Env files
 .env
