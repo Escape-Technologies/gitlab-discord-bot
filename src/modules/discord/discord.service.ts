@@ -39,11 +39,6 @@ export class DiscordService extends Client {
     });
 
     this.on('messageCreate', this.handleMessage);
-    this.database.user.count().then((count) => {
-      if (count === 0) {
-        this.hello();
-      }
-    });
   }
 
   async start() {
@@ -54,6 +49,12 @@ export class DiscordService extends Client {
     this.guild = this.guilds.cache.get(this.mrChannel.guildId);
     await this.guild?.members.fetch();
     logger.success('Bot successfully logged in');
+    this.database.user.count().then((count) => {
+      logger.success(`${count} users registered`);
+      if (count === 0) {
+        this.hello();
+      }
+    });
   }
 
   hello() {
